@@ -1,6 +1,7 @@
 import os
-from skimage import io
 import torchvision.datasets.mnist as mnist
+from skimage import io
+from tqdm import tqdm
 
 root = "E:/LeNet/data/MNIST/"
 train_set = (
@@ -21,7 +22,7 @@ def convert_to_img(train=True):
         f = open(root + "train.txt", "w")
         if not os.path.exists(data_path):
             os.makedirs(data_path)
-        for i, (img, label) in enumerate(zip(train_set[0], train_set[1])):
+        for i, (img, label) in enumerate(tqdm(zip(train_set[0], train_set[1]))):
             img_path = data_path + str(i) + ".jpg"
             io.imsave(img_path, img.numpy())
             f.write(img_path + " " + str(label) + "\n")
@@ -31,7 +32,7 @@ def convert_to_img(train=True):
         data_path = root + "/test/"
         if not os.path.exists(data_path):
             os.makedirs(data_path)
-        for i, (img, label) in enumerate(zip(test_set[0], test_set[1])):
+        for i, (img, label) in enumerate(tqdm(zip(test_set[0], test_set[1]))):
             img_path = data_path + str(i) + ".jpg"
             io.imsave(img_path, img.numpy())
             f.write(img_path + " " + str(label) + "\n")

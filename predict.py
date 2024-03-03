@@ -14,6 +14,7 @@ model.eval()
 # 预处理
 transform = transforms.Compose(
     [
+        transforms.Resize((28, 28)),
         transforms.Grayscale(),
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,)),
@@ -35,45 +36,31 @@ def predict_image(image_path):
 
 
 # show result
-def show_result():
+def show_result(image_path):
     model.eval()
-    figure = plt.figure(num="MNIST Sample Prediction", figsize=(15, 15))
-    rows, cols = 5, 2  # 每行显示两个类别的样本
+    figure = plt.figure(num="MNIST Sample Prediction", figsize=(6, 6))
 
-    for class_label in range(10):  # MNIST 数据集有 10 个类别
-        # 寻找测试集中具有特定类别的样本
-        class_samples = [
-            i for i, (img, label) in enumerate(test_set) if label == class_label
-        ]
-        # 随机选择一个具有特定类别的样本
-        sample_idx = class_samples[0]
-        img, label = test_set[sample_idx]
+    img = Image.open(image_path).convert("L")
+    img_tensor = transform(img).unsqueeze(0)  # 添加一个维度作为 batch
+    with torch.no_grad():
+        outputs = model(img_tensor)
+        probs = torch.nn.functional.softmax(outputs, dim=1)
+        max_prob, predicted = torch.max(probs, 1)
+        confidence = max_prob.item()
 
-        with torch.no_grad():
-            outputs = model(img.unsqueeze(0))
-            probs = torch.nn.functional.softmax(outputs, dim=1)
-            max_prob, predicted = torch.max(probs, 1)
-            confidence = max_prob.item()
+    plt.title(f"Predicted: {predicted.item()}, Confidence: {confidence:.3f}")
+    plt.axis("off")
+    plt.imshow(img, cmap="gray")  # 不需要使用 squeeze() 了
 
-        # 计算当前子图的索引
-        idx = class_label + 1
-        ax = figure.add_subplot(rows, cols, idx)
-        ax.set_title(
-            f"pred: {predicted.item()}, conf: {confidence:.3f}, label: {label}"
-        )
-        ax.axis("off")
-        ax.imshow(img.squeeze(), cmap="gray")
-
-    plt.subplots_adjust(wspace=0.5, hspace=0.5)
     plt.show()
 
 
 def main(image_path):
     predicted_label = predict_image(image_path)
     print("Predicted label:", predicted_label)
-    show_result()
+    show_result(image_path)
 
 
 if __name__ == "__main__":
-    image_path = "./data/MNIST/raw/test/1.jpg"  # 图像路径
+    image_path = "./data/MNIST/test/9998.jpg"  # 图像路径
     main(image_path)

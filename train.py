@@ -10,12 +10,12 @@ from model import LeNet
 
 # 超参数
 epochs = 10
-lr = 0.001
-batch_size = 64
+learn_rate = 0.001
+batch_size = 8
 
 save_model_path = "./model/LeNet.pth"
 
-show_result = True
+show_results = True
 
 
 def main():
@@ -37,7 +37,7 @@ def main():
     # 初始化模型、损失函数和优化器
     model = LeNet()
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=lr)
+    optimizer = optim.Adam(model.parameters(), lr=learn_rate)
 
     # 训练
     for epoch in range(epochs):
@@ -57,11 +57,15 @@ def main():
 
                 if i % 100 == 0 or i == total_batches:
                     average_loss = running_loss / i
-                    pbar.set_postfix({"Loss": average_loss})
+                    lr = optimizer.param_groups[0]["lr"]
+                    pbar.set_postfix({"Loss": average_loss, "LR": lr})
                     pbar.update(100)
 
         epoch_loss = running_loss / total_batches
-        print(f"Epoch {epoch + 1} completed. Average Loss: {epoch_loss:.3f}")
+        lr = optimizer.param_groups[0]["lr"]
+        print(
+            f"Epoch {epoch + 1} completed. Average Loss: {epoch_loss:.3f}, LR: {lr:.6f}"
+        )
 
     print("Finished Training")
 
@@ -83,7 +87,7 @@ def main():
     print("Accuracy on the test images: %d %%" % (100 * correct / total))
 
     # 可视化结果
-    if show_result:
+    if show_results:
         model.eval()
         figure = plt.figure(num="MNIST Sample Prediction", figsize=(15, 15))
         rows, cols = 5, 2  # 每行显示两个类别的样本
