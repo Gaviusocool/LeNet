@@ -25,10 +25,10 @@ pip install -r requirements.txt
    ```
    **训练时每个 epoch 会输出 剩余时间、训练速度、loss 、学习率观测训练效果**
 
-   ![1709472892810](image/README/1709472892810.png)
+   ![1709472892810](asset/README/1709472892810.png)
    输出模型精度：
 
-   ![1709473397616](image/README/1709473397616.png)
+   ![1709473397616](asset/README/1709473397616.png)
 3. 训练完成后可以选择是否展示效果(随机抽取照片展示)
 
    pred:预测结果
@@ -37,7 +37,7 @@ pip install -r requirements.txt
 
    ---
 
-   ![1709473020722](image/README/1709473020722.png)
+   ![1709473020722](asset/README/1709473020722.png)
 4. **运行 `visual.py` 可视化图片**
    因为原本的数据集以字节的形式储存,使用此 py 文件生成将 `数据集照片、测试集照片、train.txt、test.txt`,方便我们自己查看
 5. **运行 `predict.py`**
@@ -48,6 +48,6 @@ pip install -r requirements.txt
    image_path="./data/MNIST/raw/test/1.jpg"  # 指定图像路径
    model_path="./model/LeNet.pth" # 指定模型路径
    ```
-   控制台输出预测结果
+   控制台输出预测结果:
 
-   ![1709475356845](image/README/1709475356845.png)
+   ![1709475356845](asset/README/1709475356845.png)
