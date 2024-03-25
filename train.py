@@ -11,7 +11,7 @@ from model import LeNet
 # 超参数
 epochs = 10
 learn_rate = 0.001
-batch_size = 8
+batch_size = 16
 
 save_model_path = "./model/LeNet.pth"
 
